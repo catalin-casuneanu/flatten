@@ -44,6 +44,25 @@ const flatten = (obj = {}, res = {}, extraKey = "") => {
 };
 
 /**
+ * Flatten the Json Rewritten
+ * @param obj
+ */
+const flattenRewritten = (obj = {}) => {
+  let res = {};
+  for (let key in obj) {
+    if (typeof obj[key] !== "object") {
+      res[key] = obj[key];
+    } else {
+      const temp = flatten(obj[key]);
+      for (const nestedKey in temp) {
+        res[key + "__" + nestedKey.replaceAll(" ", "--")] = temp[nestedKey];
+      }
+    }
+  }
+  return res;
+};
+
+/**
  * Benchmark
  * @param func
  * @param input
@@ -60,4 +79,6 @@ const bench = (func, input, iterations) => {
 };
 
 console.log(flatten(jsonu));
+console.log(flattenRewritten(jsonu));
 console.log("Flatten " + bench(flatten, jsonu, 1000));
+console.log("Flatten Rewritten " + bench(flattenRewritten, jsonu, 1000));
